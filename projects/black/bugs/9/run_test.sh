@@ -1,1 +1,1 @@
-python -m unittest -q tests.test_black.BlackTestCase.test_python2_print_function
+pytest tests/test_black.py::BlackTestCase::test_python2_print_function

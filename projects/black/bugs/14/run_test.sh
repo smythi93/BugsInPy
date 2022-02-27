@@ -1,1 +1,1 @@
-python -m unittest -q tests.test_black.BlackTestCase.test_get_future_imports
+pytest tests/test_black.py::BlackTestCase::test_get_future_imports

@@ -1,1 +1,1 @@
-python -m unittest -q tests.test_black.BlackTestCase.test_preserves_line_endings
+pytest tests/test_black.py::BlackTestCase::test_preserves_line_endings

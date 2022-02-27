@@ -1,1 +1,1 @@
-python -m unittest -q tests.test_black.BlackTestCase.test_tuple_assign
+pytest tests/test_black.py::BlackTestCase::test_tuple_assign

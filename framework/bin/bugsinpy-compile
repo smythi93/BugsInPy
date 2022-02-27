@@ -20,6 +20,7 @@ do
     esac
 done
 
+cwd=$(pwd)
 ###Update the work directory
 if [ "$work_dir" == "" ]; then 
    work_dir=$(pwd)
@@ -50,22 +51,25 @@ fi
 #fi
 
 ###Remove environment if exist
-rm -r -f env/
+rm -r -f "$work_dir/env/"
 
 ###Add environment
-python -m venv env
+python -m venv "$work_dir/env"
 
 ###Activate environment
-if [ -d "env/Scripts" ]; then
-  source env/Scripts/activate
+if [ -d "$work_dir/env/Scripts" ]; then
+  source $work_dir/env/Scripts/activate
 else
   check_dos2unix=$(dos2unix --version 2>&1)
 	if [ "$check_dos2unix" == *"not found"* ]; then
 	   echo "Please install dos2unix (sudo apt-get dos2unix)"
 	   exit
 	fi
-  source env/bin/activate
+  source $work_dir/env/bin/activate
   dos2unix $work_dir/bugsinpy_requirements.txt
+  if [ -f "$work_dir/test_requirements.txt" ]; then
+   dos2unix $work_dir/test_requirements.txt
+  fi
 fi
 ###Add pythonpath
 pythonpath_set=""
@@ -121,22 +125,29 @@ done < "$work_dir/bugsinpy_bug.info"
 ###Run setup.sh
 #dos2unix $work_dir/bugsinpy_requirements.txt
 #pip install -r "$work_dir/bugsinpy_requirements.txt"
-if grep -q '[^[:space:]]' "$work_dir/bugsinpy_requirements.txt"; then
-    cat "$work_dir/bugsinpy_requirements.txt" | sed -e '/^\s*#.*$/d' -e '/^\s*$/d' | xargs -n 1 pip install
+#speeds up building
+pip install --upgrade pip
+pip install --upgrade setuptools
+pip install wheel==0.37.1
+pip install pytest==7.0.1
+
+cat "$work_dir/bugsinpy_requirements.txt" | sed -e '/^\s*#.*$/d' -e '/^\s*$/d' | while read PACKAGE; do pip install --pre "$PACKAGE"; done
+# pip install --pre -r "$work_dir/bugsinpy_requirements.txt"
+
+if [ -f "$work_dir/test_requirements.txt" ]; then
+   cat "$work_dir/test_requirements.txt" | sed -e '/^\s*#.*$/d' -e '/^\s*$/d' | while read PACKAGE; do pip install --pre "$PACKAGE"; done
+   # pip install --pre -r "$work_dir/test_requirements.txt"
 fi
 
+cd "$work_dir"
 for index in "${!run_setup[@]}"
 do
    run_setup_trail=${run_setup[index]} 
    run_setup_now=$(echo $run_setup_trail | sed -e 's/\r//g')
    $run_setup_now
 done
-  
-###Install requirement
-#pip install -r "$work_dir/bugsinpy_requirements.txt"
-if grep -q '[^[:space:]]' "$work_dir/bugsinpy_requirements.txt"; then
-    cat "$work_dir/bugsinpy_requirements.txt" | sed -e '/^\s*#.*$/d' -e '/^\s*$/d' | xargs -n 1 pip install
-fi
+cd "$cwd"
+
 deactivate
 
 

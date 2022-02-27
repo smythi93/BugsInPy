@@ -1,2 +1,2 @@
-python -m unittest -q tests.test_black.BlackTestCase.test_async_as_identifier
-python -m unittest -q tests.test_black.BlackTestCase.test_python37
+pytest tests/test_black.py::BlackTestCase::test_async_as_identifier
+pytest tests/test_black.py::BlackTestCase::test_python37
