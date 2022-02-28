@@ -66,7 +66,7 @@ else
   source env/bin/activate
 fi
 
-pytest="0"
+pytest="1"
 #read file run_test.sh
 run_command_all=""
 DONE=false
@@ -74,8 +74,8 @@ until $DONE ;do
 read || DONE=true
 if [ "$REPLY" != "" ]; then
    run_command_all+="$REPLY;"
-   if [[ "$REPLY" == *"pytest"* || "$REPLY" == *"py.test"* ]]; then
-       pytest="1"
+   if [[ "$REPLY" == *"unittest"* ]]; then
+       pytest="0"
    fi
    echo $REPLY
 fi
