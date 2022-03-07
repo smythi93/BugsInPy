@@ -1,6 +1,9 @@
 #!/bin/bash
+
 usage="-w work_dir
-             The working directory to compile the project. Default will be the current directory.
+             The working directory of the project to install sdtools. Default will be the current directory.
+       -s sdtools_dir
+             The directory of sdtools.
 "
 
 case $1 in
@@ -13,12 +16,18 @@ ____HALP
 esac
 
 ###Read the flag of checkout
-while getopts p:i:v:w: flag
+while getopts w:s: flag
 do
     case "${flag}" in
         w) work_dir=${OPTARG};;
+        s) sdtools_dir=${OPTARG};;
     esac
 done
+
+if [ "$sdtools_dir" == "" ]; then 
+   echo "No dir for sdtools given"
+   exit
+fi
 
 cwd=$(pwd)
 ###Update the work directory
@@ -129,6 +138,7 @@ done < "$work_dir/bugsinpy_bug.info"
 pip install --upgrade pip
 pip install --upgrade setuptools
 pip install wheel==0.37.1
+pip install "$sdtools_dir"
 pip install pytest==7.0.1
 
 cat "$work_dir/bugsinpy_requirements.txt" | sed -e '/^\s*#.*$/d' -e '/^\s*$/d' | xargs -n 1 pip install --pre
@@ -224,4 +234,3 @@ deactivate
 
 ###Add compile flag
 echo "1" > "$work_dir/bugsinpy_compile_flag"
-

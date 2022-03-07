@@ -142,30 +142,30 @@ elif [[ "$run_all" == "1" ]]; then
 elif [ "$single_test" != "" ]; then
    if [[ "$pytest" == "1" ]]; then
       if [[ "$output" == "" ]]; then
-         res_first=$(python -m pytest $single_test 2>&1)
+         res_first=$(python -m pytest "$single_test" 2>&1)
          echo "$res_first"
-         echo "python -m pytest $single_test" &>>"$work_dir/bugsinpy_alltest.txt"
+         echo "python -m pytest \"$single_test\"" &>>"$work_dir/bugsinpy_alltest.txt"
          echo "$res_first" &>>"$work_dir/bugsinpy_alltest.txt"
       else
-         res_first=$(python -m pytest $single_test --junit-xml=$output 2>&1)
+         res_first=$(python -m pytest "$single_test" --junit-xml=$output 2>&1)
          echo "$res_first"
-         echo "python -m pytest $single_test --junit-xml=$output" &>>"$work_dir/bugsinpy_alltest.txt"
+         echo "python -m pytest \"$single_test\" --junit-xml=$output" &>>"$work_dir/bugsinpy_alltest.txt"
          echo "$res_first" &>>"$work_dir/bugsinpy_alltest.txt"
       fi
    else
       if [[ "$output" == "" ]]; then
-         res_first=$(python -m unittest $single_test 2>&1)
+         res_first=$(python -m unittest "$single_test" 2>&1)
          echo "$res_first"
-         echo "python -m unittest $single_test" &>>"$work_dir/bugsinpy_alltest.txt"
+         echo "python -m unittest \"$single_test\"" &>>"$work_dir/bugsinpy_alltest.txt"
          echo "$res_first" &>>"$work_dir/bugsinpy_alltest.txt"
       else
          res_first=$(python -m pip install unittest-xml-reporting 2>&1)
          echo "$res_first"
          echo "python -m pip install unittest-xml-reporting" &>>"$work_dir/bugsinpy_alltest.txt"
          echo "$res_first" &>>"$work_dir/bugsinpy_alltest.txt"
-         res_first=$(python -m xmlrunner --output-file $output $single_test 2>&1)
+         res_first=$(python -m xmlrunner --output-file $output "$single_test" 2>&1)
          echo "$res_first"
-         echo "python -m xmlrunner --output-file $output $single_test" &>>"$work_dir/bugsinpy_alltest.txt"
+         echo "python -m xmlrunner --output-file $output \"$single_test\"" &>>"$work_dir/bugsinpy_alltest.txt"
          echo "$res_first" &>>"$work_dir/bugsinpy_alltest.txt"
       fi
    fi
