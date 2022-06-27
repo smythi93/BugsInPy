@@ -20,12 +20,12 @@ while getopts w:s: flag
 do
     case "${flag}" in
         w) work_dir=${OPTARG};;
-        s) sdtools_dir=${OPTARG};;
+        s) sflkit_dir=${OPTARG};;
     esac
 done
 
-if [ "$sdtools_dir" == "" ]; then 
-   echo "No dir for sdtools given"
+if [ "$sflkit_dir" == "" ]; then 
+   echo "No dir for sflkit given"
    exit
 fi
 
@@ -138,7 +138,7 @@ done < "$work_dir/bugsinpy_bug.info"
 pip install --upgrade pip
 pip install --upgrade setuptools
 pip install wheel==0.37.1
-pip install "$sdtools_dir"
+pip install "$sflkit_dir"
 pip install pytest==7.0.1
 
 cat "$work_dir/bugsinpy_requirements.txt" | sed -e '/^\s*#.*$/d' -e '/^\s*$/d' | xargs -n 1 pip install --pre
